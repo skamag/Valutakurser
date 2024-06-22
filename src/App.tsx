@@ -65,6 +65,8 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
+  const [searchText, setSearchText] = useState("")
+
   useEffect(() => {
     axios
       .get<ExchangeRateData>(URL)
@@ -114,15 +116,35 @@ function App() {
     ],
   }
 
+  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let inputText = event.target.value
+    setSearchText(inputText)
+  }
+
   return (
     <div className="App">
       <Header />
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {!loading && !error && (
-        <div>
-          <h2>USD to NOK Exchange Rate Over Time</h2>
-          <Line data={chartData} />
+        <div className="mainContainer">
+          <div className="leftMain">
+            <div className="searchInputContainer">
+              <i className="fa fa-search"></i>
+              <input
+                className="searchInput"
+                type="text"
+                value={searchText}
+                onChange={handleTextChange}
+              />
+            </div>
+          </div>
+          <div className="rightMain">
+            <h2>USD to NOK Exchange Rate Over Time</h2>
+            <div className="graphContainer">
+              <Line data={chartData} />
+            </div>
+          </div>
         </div>
       )}
     </div>

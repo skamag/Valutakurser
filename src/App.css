@@ -1,0 +1,27 @@
+.App {
+  padding: 0 5%;
+}
+.mainContainer {
+  display: flex;
+}
+.searchInputContainer {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid rgb(200, 200, 200);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.searchInput {
+  border: none;
+}
+textarea:focus,
+input:focus {
+  outline: none;
+}
+.graphContainer {
+  width: 60%;
+  margin-left: auto;
+  border: 1px solid rgb(200, 200, 200);
+}
