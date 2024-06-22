@@ -63,12 +63,10 @@ function App() {
   const [startDate, setStartDate] = useState("1994-04-15")
   const [endDate, setEndDate] = useState("2024-04-15")
 
-  let URL =
-    // `https://data.norges-bank.no/api/data/EXR/${frekvens}.USD+GBP+EUR+SEK.NOK.SP?format=sdmx-json&startPeriod=1940-06-07&endPeriod=2024-04-15&locale=no`
-    // "https://data.norges-bank.no/api/data/EXR/M.USD+GBP+EUR+SEK.NOK.SP?format=sdmx-json&startPeriod=2014-06-22&endPeriod=2024-04-15&locale=no"
-    `https://data.norges-bank.no/api/data/EXR/${frekvens}.USD.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
+  let URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.USD+EUR.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
 
-  const [data, setData] = useState<Observation[]>([])
+  const [usdData, setUsdData] = useState<Observation[]>([])
+  const [eurData, setEurData] = useState<Observation[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -89,16 +87,27 @@ function App() {
         const timePeriods = observationDimension.values.map(
           (value) => value.name
         )
-        const series = dataSet.series["0:0:0:0"].observations
 
-        const parsedData: Observation[] = timePeriods.map(
+        // Extracting USD and EUR data
+        const usdSeries = dataSet.series["0:0:0:0"].observations
+        const eurSeries = dataSet.series["0:1:0:0"].observations
+
+        const parsedUsdData: Observation[] = timePeriods.map(
           (timePeriod, index) => ({
             timePeriod,
-            value: parseFloat(series[index]?.[0] || "0"),
+            value: parseFloat(usdSeries[index]?.[0] || "0"),
           })
         )
 
-        setData(parsedData)
+        const parsedEurData: Observation[] = timePeriods.map(
+          (timePeriod, index) => ({
+            timePeriod,
+            value: parseFloat(eurSeries[index]?.[0] || "0"),
+          })
+        )
+
+        setUsdData(parsedUsdData)
+        setEurData(parsedEurData)
         setLoading(false)
       })
       .catch((error) => {
@@ -109,13 +118,20 @@ function App() {
 
   // Prepare data for the chart
   const chartData = {
-    labels: data.map((obs) => obs.timePeriod),
+    labels: usdData.map((obs) => obs.timePeriod),
     datasets: [
       {
         label: "USD to NOK Exchange Rate",
-        data: data.map((obs) => obs.value),
+        data: usdData.map((obs) => obs.value),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderWidth: 1,
+      },
+      {
+        label: "EUR to NOK Exchange Rate",
+        data: eurData.map((obs) => obs.value),
+        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
         borderWidth: 1,
       },
     ],
@@ -142,6 +158,7 @@ function App() {
     const formattedDate = date.toISOString().split("T")[0]
     setStartDate(formattedDate)
   }
+
   const handleChangeEndDate = (event: React.ChangeEvent<HTMLInputElement>) => {
     let valgtEndDate = event.target.value
     const date = new Date(valgtEndDate)
@@ -206,7 +223,6 @@ function App() {
             </div>
           </div>
           <div className="">
-            {/* <h2>USD to NOK Exchange Rate Over Time</h2> */}
             <div className="graphContainer">
               <Line className="graph" data={chartData} />
             </div>
