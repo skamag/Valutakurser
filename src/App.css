@@ -3,25 +3,44 @@
 }
 .mainContainer {
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+.changeValuesContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
 }
 .searchInputContainer {
-  padding: 5px 10px;
+  width: 100%;
+}
+.searchInputContainer,
+.frekvensContainer,
+.startDateContainer,
+.endDateContainer {
+  padding: 10px 20px;
   border-radius: 5px;
+  background-color: white;
   border: 1px solid rgb(200, 200, 200);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 }
-.searchInput {
+input,
+select {
   border: none;
 }
-textarea:focus,
-input:focus {
+.searchInput {
+  width: 100%;
+}
+input:focus,
+select:focus {
   outline: none;
 }
 .graphContainer {
-  width: 60%;
-  margin-left: auto;
+  width: 100%;
   border: 1px solid rgb(200, 200, 200);
 }
