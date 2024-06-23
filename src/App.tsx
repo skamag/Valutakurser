@@ -63,10 +63,12 @@ function App() {
   const [startDate, setStartDate] = useState("1994-04-15")
   const [endDate, setEndDate] = useState("2024-04-15")
 
-  let URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.USD+EUR.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
+  let URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.USD+EUR+SEK+GBP.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
 
   const [usdData, setUsdData] = useState<Observation[]>([])
   const [eurData, setEurData] = useState<Observation[]>([])
+  const [sekData, setSekData] = useState<Observation[]>([])
+  const [gbpData, setGbpData] = useState<Observation[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -88,9 +90,28 @@ function App() {
           (value) => value.name
         )
 
-        // Extracting USD and EUR data
-        const usdSeries = dataSet.series["0:0:0:0"].observations
-        const eurSeries = dataSet.series["0:1:0:0"].observations
+        // Extracting USD, EUR, SEK, and GBP data
+        let usdSeries: any
+        let eurSeries: any
+        let gbpSeries: any
+        let sekSeries: any
+
+        if (frekvens === "A") {
+          usdSeries = dataSet.series["0:0:0:0"].observations
+          eurSeries = dataSet.series["0:1:0:0"].observations
+          gbpSeries = dataSet.series["0:2:0:0"].observations
+          sekSeries = dataSet.series["0:3:0:0"].observations
+        } else if (frekvens === "M") {
+          sekSeries = dataSet.series["0:0:0:0"].observations
+          gbpSeries = dataSet.series["0:1:0:0"].observations
+          usdSeries = dataSet.series["0:2:0:0"].observations
+          eurSeries = dataSet.series["0:3:0:0"].observations
+        } else if (frekvens === "B") {
+          usdSeries = dataSet.series["0:0:0:0"].observations
+          gbpSeries = dataSet.series["0:1:0:0"].observations
+          eurSeries = dataSet.series["0:2:0:0"].observations
+          sekSeries = dataSet.series["0:3:0:0"].observations
+        }
 
         const parsedUsdData: Observation[] = timePeriods.map(
           (timePeriod, index) => ({
@@ -106,9 +127,27 @@ function App() {
           })
         )
 
+        const parsedSekData: Observation[] = timePeriods.map(
+          (timePeriod, index) => ({
+            timePeriod,
+            value: parseFloat(sekSeries[index]?.[0] || "0"),
+          })
+        )
+
+        const parsedGbpData: Observation[] = timePeriods.map(
+          (timePeriod, index) => ({
+            timePeriod,
+            value: parseFloat(gbpSeries[index]?.[0] || "0"),
+          })
+        )
+
         setUsdData(parsedUsdData)
         setEurData(parsedEurData)
+        setSekData(parsedSekData)
+        setGbpData(parsedGbpData)
         setLoading(false)
+
+        console.log(dataSet.series)
       })
       .catch((error) => {
         setError("Error fetching data")
@@ -132,6 +171,20 @@ function App() {
         data: eurData.map((obs) => obs.value),
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderWidth: 1,
+      },
+      {
+        label: "SEK to NOK Exchange Rate",
+        data: sekData.map((obs) => obs.value),
+        borderColor: "rgba(54, 162, 235, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderWidth: 1,
+      },
+      {
+        label: "GBP to NOK Exchange Rate",
+        data: gbpData.map((obs) => obs.value),
+        borderColor: "rgba(255, 206, 86, 1)",
+        backgroundColor: "rgba(255, 206, 86, 0.2)",
         borderWidth: 1,
       },
     ],
