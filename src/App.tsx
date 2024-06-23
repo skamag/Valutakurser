@@ -63,7 +63,7 @@ function App() {
     "SEK - Svenske kroner",
     "GBP - Britiske pund",
   ]
-  const [selectedCurrencies, setSelectedCurrencies] = useState([])
+  const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
   const [searchText, setSearchText] = useState("")
   const [frekvens, setFrekvens] = useState("A")
   const [startDate, setStartDate] = useState("1994-04-15")
@@ -200,7 +200,19 @@ function App() {
   }
 
   const addCurrency = (cur: string) => {
-    console.log(cur)
+    if (!selectedCurrencies.includes(cur)) {
+      setSelectedCurrencies((selectedCurrencies) => [
+        ...selectedCurrencies,
+        cur,
+      ])
+    }
+    setSearchText("")
+  }
+
+  const removeCurrency = (cur: string) => {
+    setSelectedCurrencies((selectedCurrencies) =>
+      selectedCurrencies.filter((currency) => currency !== cur)
+    )
   }
 
   const handleChangeFrekvens = (
@@ -244,20 +256,35 @@ function App() {
                 value={searchText}
                 onChange={handleTextChange}
               />
-
               {searchText !== "" && (
                 <div className="searchResultsContainer">
-                  {currencies.map((cur) => (
-                    <div
-                      key={cur}
-                      className="searchResult"
-                      onClick={() => addCurrency(cur)}
-                    >
-                      {cur}
-                    </div>
-                  ))}
+                  {currencies
+                    .filter((currency) =>
+                      currency.toLowerCase().includes(searchText.toLowerCase())
+                    )
+                    .map((cur) => (
+                      <div
+                        key={cur}
+                        className="searchResult"
+                        onClick={() => addCurrency(cur)}
+                      >
+                        {cur}
+                      </div>
+                    ))}
                 </div>
               )}
+              {selectedCurrencies.length > 0 &&
+                selectedCurrencies.map((cur) => (
+                  <div key={cur} className="selectedCurreciesContainer">
+                    <div
+                      className="selectedCurrency"
+                      onClick={() => removeCurrency(cur)}
+                    >
+                      {cur.slice(0, 3)}
+                      <i className="fa fa-close"></i>
+                    </div>
+                  </div>
+                ))}
             </div>
             <div className="frekvensContainer">
               <select
