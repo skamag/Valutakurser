@@ -1,6 +1,21 @@
 .App {
   padding: 0 5%;
 }
+.header {
+  display: flex;
+  align-items: center;
+  height: 100px;
+  width: fit-content;
+  font-size: 30px;
+  font-family: monospace;
+  /* font-family: sans-serif; */
+  letter-spacing: 2px;
+  /* background: linear-gradient(to right, #587e7e, #89577f); */
+  /* background: linear-gradient(to right, #0c3763, #4d0606); */
+  /* -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent; */
+}
 .mainContainer {
   display: flex;
   flex-direction: column;
@@ -15,6 +30,7 @@
 }
 .searchInputContainer {
   width: 100%;
+  position: relative;
 }
 .searchInputContainer,
 .frekvensContainer,
@@ -28,6 +44,10 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
+  height: 30px;
+}
+.searchIcon {
+  width: 20px;
 }
 input,
 select {
@@ -39,6 +59,17 @@ select {
 input:focus,
 select:focus {
   outline: none;
+}
+.searchResultsContainer {
+  background-color: white;
+  position: absolute;
+  left: 50px;
+  top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid rgb(200, 200, 200);
 }
 .graphContainer {
   width: 100%;

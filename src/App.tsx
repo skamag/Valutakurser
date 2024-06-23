@@ -11,10 +11,9 @@ import {
   Legend,
 } from "chart.js"
 import axios from "axios"
-import Header from "./components/Header"
+// import Header from "./components/Header"
 import "./App.css"
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -58,6 +57,13 @@ interface ExchangeRateData {
 }
 
 function App() {
+  const currencies = [
+    "USD - Amerikanske dollar",
+    "EUR - Euro",
+    "SEK - Svenske kroner",
+    "GBP - Britiske pund",
+  ]
+  const [selectedCurrencies, setSelectedCurrencies] = useState([])
   const [searchText, setSearchText] = useState("")
   const [frekvens, setFrekvens] = useState("A")
   const [startDate, setStartDate] = useState("1994-04-15")
@@ -90,7 +96,6 @@ function App() {
           (value) => value.name
         )
 
-        // Extracting USD, EUR, SEK, and GBP data
         let usdSeries: any
         let eurSeries: any
         let gbpSeries: any
@@ -147,7 +152,7 @@ function App() {
         setGbpData(parsedGbpData)
         setLoading(false)
 
-        console.log(dataSet.series)
+        console.log(response)
       })
       .catch((error) => {
         setError("Error fetching data")
@@ -155,7 +160,6 @@ function App() {
       })
   }, [frekvens, startDate, endDate])
 
-  // Prepare data for the chart
   const chartData = {
     labels: usdData.map((obs) => obs.timePeriod),
     datasets: [
@@ -174,8 +178,8 @@ function App() {
         borderWidth: 1,
       },
       {
-        label: "SEK to NOK Exchange Rate",
-        data: sekData.map((obs) => obs.value),
+        label: "10 SEK to NOK Exchange Rate",
+        data: sekData.map((obs) => obs.value / 10),
         borderColor: "rgba(54, 162, 235, 1)",
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         borderWidth: 1,
@@ -193,6 +197,10 @@ function App() {
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let inputText = event.target.value
     setSearchText(inputText)
+  }
+
+  const addCurrency = (cur: string) => {
+    console.log(cur)
   }
 
   const handleChangeFrekvens = (
@@ -221,20 +229,35 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
+      {/* <Header /> */}
+      <h1 className="header">Valutakurser</h1>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {!loading && !error && (
         <div className="mainContainer">
           <div className="changeValuesContainer">
             <div className="searchInputContainer">
-              <i className="fa fa-search"></i>
+              <i className="fa fa-search searchIcon"></i>
               <input
                 className="searchInput"
                 type="text"
                 value={searchText}
                 onChange={handleTextChange}
               />
+
+              {searchText !== "" && (
+                <div className="searchResultsContainer">
+                  {currencies.map((cur) => (
+                    <div
+                      key={cur}
+                      className="searchResult"
+                      onClick={() => addCurrency(cur)}
+                    >
+                      {cur}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="frekvensContainer">
               <select
