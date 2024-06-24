@@ -59,9 +59,9 @@ interface ExchangeRateData {
 function App() {
   const currencies = [
     "USD - Amerikanske dollar",
-    // "EUR - Euro",
-    // "SEK - Svenske kroner",
-    // "GBP - Britiske pund",
+    "EUR - Euro",
+    "SEK - Svenske kroner",
+    "GBP - Britiske pund",
   ]
   const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
   const [searchText, setSearchText] = useState("")
@@ -77,6 +77,37 @@ function App() {
   const [gbpData, setGbpData] = useState<Observation[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+
+  const [curDataSets, setCurDataSets] = useState<any[]>([])
+
+  const [usdDataSet, setUsdDataSet] = useState<any>({
+    label: "USD to NOK Exchange Rate",
+    data: usdData.map((obs) => obs.value),
+    borderColor: "rgba(75, 192, 192, 1)",
+    backgroundColor: "rgba(75, 192, 192, 0.2)",
+    borderWidth: 1,
+  })
+  const eurDataSet = {
+    label: "EUR to NOK Exchange Rate",
+    data: eurData.map((obs) => obs.value),
+    borderColor: "rgba(255, 99, 132, 1)",
+    backgroundColor: "rgba(255, 99, 132, 0.2)",
+    borderWidth: 1,
+  }
+  const sekDataSet = {
+    label: "10 SEK to NOK Exchange Rate",
+    data: sekData.map((obs) => obs.value / 10),
+    borderColor: "rgba(54, 162, 235, 1)",
+    backgroundColor: "rgba(54, 162, 235, 0.2)",
+    borderWidth: 1,
+  }
+  const gbpDataSet = {
+    label: "GBP to NOK Exchange Rate",
+    data: gbpData.map((obs) => obs.value),
+    borderColor: "rgba(255, 206, 86, 1)",
+    backgroundColor: "rgba(255, 206, 86, 0.2)",
+    borderWidth: 1,
+  }
 
   useEffect(() => {
     axios
@@ -152,7 +183,7 @@ function App() {
         setGbpData(parsedGbpData)
         setLoading(false)
 
-        console.log(response)
+        console.log(parsedEurData)
       })
       .catch((error) => {
         setError("Error fetching data")
@@ -160,38 +191,9 @@ function App() {
       })
   }, [frekvens, startDate, endDate])
 
-  const chartData = {
+  let chartData = {
     labels: usdData.map((obs) => obs.timePeriod),
-    datasets: [
-      {
-        label: "USD to NOK Exchange Rate",
-        data: usdData.map((obs) => obs.value),
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderWidth: 1,
-      },
-      // {
-      //   label: "EUR to NOK Exchange Rate",
-      //   data: eurData.map((obs) => obs.value),
-      //   borderColor: "rgba(255, 99, 132, 1)",
-      //   backgroundColor: "rgba(255, 99, 132, 0.2)",
-      //   borderWidth: 1,
-      // },
-      // {
-      //   label: "10 SEK to NOK Exchange Rate",
-      //   data: sekData.map((obs) => obs.value / 10),
-      //   borderColor: "rgba(54, 162, 235, 1)",
-      //   backgroundColor: "rgba(54, 162, 235, 0.2)",
-      //   borderWidth: 1,
-      // },
-      // {
-      //   label: "GBP to NOK Exchange Rate",
-      //   data: gbpData.map((obs) => obs.value),
-      //   borderColor: "rgba(255, 206, 86, 1)",
-      //   backgroundColor: "rgba(255, 206, 86, 0.2)",
-      //   borderWidth: 1,
-      // },
-    ],
+    datasets: curDataSets,
   }
 
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,6 +207,25 @@ function App() {
         ...selectedCurrencies,
         cur,
       ])
+      console.log(usdDataSet.data)
+      if (cur === "USD - Amerikanske dollar") {
+        const updatedUsdDataSet = {
+          ...usdDataSet,
+          data: usdData.map((obs) => obs.value),
+        }
+        setUsdDataSet(updatedUsdDataSet)
+        setCurDataSets((curDataSets) => [...curDataSets, updatedUsdDataSet])
+        console.log(curDataSets)
+      }
+      if (cur === "EUR - Euro") {
+        setCurDataSets((curDataSets) => [...curDataSets, eurDataSet])
+      }
+      if (cur === "GBP - Britiske pund") {
+        setCurDataSets((curDataSets) => [...curDataSets, gbpDataSet])
+      }
+      if (cur === "SEK - Svenske kroner") {
+        setCurDataSets((curDataSets) => [...curDataSets, sekDataSet])
+      }
     }
     setSearchText("")
   }
@@ -213,6 +234,26 @@ function App() {
     setSelectedCurrencies((selectedCurrencies) =>
       selectedCurrencies.filter((currency) => currency !== cur)
     )
+    if (cur === "USD - Amerikanske dollar") {
+      setCurDataSets((curDataSets) =>
+        curDataSets.filter((dataSet) => dataSet.label !== usdDataSet.label)
+      )
+    }
+    if (cur === "EUR - Euro") {
+      setCurDataSets((curDataSets) =>
+        curDataSets.filter((dataSet) => dataSet.label !== eurDataSet.label)
+      )
+    }
+    if (cur === "GBP - Britiske pund") {
+      setCurDataSets((curDataSets) =>
+        curDataSets.filter((dataSet) => dataSet.label !== gbpDataSet.label)
+      )
+    }
+    if (cur === "SEK - Svenske kroner") {
+      setCurDataSets((curDataSets) =>
+        curDataSets.filter((dataSet) => dataSet.label !== sekDataSet.label)
+      )
+    }
   }
 
   const handleChangeFrekvens = (
