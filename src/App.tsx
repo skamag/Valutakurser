@@ -100,18 +100,11 @@ function App() {
     "HUF - Ungarske forinter",
     "VND - Vietnamesiske dong",
   ]
-  const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([
-    "USD - Amerikanske dollar",
-  ])
+  const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
   const [searchText, setSearchText] = useState("")
   const [frekvens, setFrekvens] = useState("A")
   const [startDate, setStartDate] = useState("1994-04-15")
   const [endDate, setEndDate] = useState("2024-04-15")
-
-  let URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.${selectedCurrencies[0].slice(
-    0,
-    3
-  )}.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
 
   const [curData, setCurData] = useState<Observation[]>([])
   // const [usdData, setUsdData] = useState<Observation[]>([])
@@ -122,6 +115,19 @@ function App() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    let URL
+
+    if (selectedCurrencies.length > 0) {
+      URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.${selectedCurrencies[0].slice(
+        0,
+        3
+      )}.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
+    } else {
+      URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.USD.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
+    }
+
+    console.log(selectedCurrencies)
+
     axios
       .get<ExchangeRateData>(URL)
       .then((response) => {
@@ -216,7 +222,7 @@ function App() {
         setError("Error fetching data")
         setLoading(false)
       })
-  }, [frekvens, startDate, endDate])
+  }, [selectedCurrencies, frekvens, startDate, endDate])
 
   const chartData = {
     labels: curData.map((obs) => obs.timePeriod),
@@ -250,6 +256,64 @@ function App() {
       //   borderWidth: 1,
       // },
     ],
+  }
+
+  const options: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: "top" as const,
+        labels: {
+          font: {
+            size: 14,
+            weight: "bold",
+          },
+          color: "white",
+        },
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        titleFont: {
+          size: 16,
+          weight: "bold",
+        },
+        bodyFont: {
+          size: 14,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          font: {
+            size: 12,
+          },
+          color: "white",
+        },
+        title: {
+          color: "white",
+        },
+      },
+      y: {
+        grid: {
+          color: "rgba(200, 200, 200, 0.2)",
+        },
+        ticks: {
+          font: {
+            size: 12,
+          },
+          color: "white",
+        },
+        title: {
+          color: "white",
+        },
+      },
+    },
   }
 
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -386,7 +450,7 @@ function App() {
           <div className="">
             {selectedCurrencies.length > 0 && (
               <div className="graphContainer">
-                <Line className="graph" data={chartData} />
+                <Line className="graph" data={chartData} options={options} />
               </div>
             )}
           </div>
