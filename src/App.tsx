@@ -126,7 +126,7 @@ function App() {
       URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.USD.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
     }
 
-    console.log(selectedCurrencies)
+    // console.log(selectedCurrencies)
 
     axios
       .get<ExchangeRateData>(URL)
@@ -216,7 +216,7 @@ function App() {
         // setGbpData(parsedGbpData)
         setLoading(false)
 
-        console.log(response)
+        // console.log(response)
       })
       .catch((error) => {
         setError("Error fetching data")
@@ -342,7 +342,7 @@ function App() {
   ) => {
     let valgtFrekvens = event.target.value
     setFrekvens(valgtFrekvens)
-    console.log(valgtFrekvens)
+    // console.log(valgtFrekvens)
   }
 
   const handleChangeStartDate = (
@@ -350,10 +350,14 @@ function App() {
   ) => {
     let valgtStartDate = event.target.value
 
+    console.log(
+      parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")),
+      parseInt(endDate.replace(/[^0-9 ]/g, ""))
+    )
     if (
       parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) <
         parseInt(endDate.replace(/[^0-9 ]/g, "")) &&
-      parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) > 0
+      parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) > 19000000
     ) {
       const date = new Date(valgtStartDate)
       const formattedDate = date.toISOString().split("T")[0]
