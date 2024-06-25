@@ -349,16 +349,31 @@ function App() {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     let valgtStartDate = event.target.value
-    const date = new Date(valgtStartDate)
-    const formattedDate = date.toISOString().split("T")[0]
-    setStartDate(formattedDate)
+
+    if (
+      parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) <
+        parseInt(endDate.replace(/[^0-9 ]/g, "")) &&
+      parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) > 0
+    ) {
+      const date = new Date(valgtStartDate)
+      const formattedDate = date.toISOString().split("T")[0]
+      setStartDate(formattedDate)
+    }
   }
 
   const handleChangeEndDate = (event: React.ChangeEvent<HTMLInputElement>) => {
     let valgtEndDate = event.target.value
-    const date = new Date(valgtEndDate)
-    const formattedDate = date.toISOString().split("T")[0]
-    setEndDate(formattedDate)
+
+    // console.log(parseInt(valgtEndDate.replace(/[^0-9 ]/g, "")))
+    if (
+      parseInt(valgtEndDate.replace(/[^0-9 ]/g, "")) >
+        parseInt(startDate.replace(/[^0-9 ]/g, "")) &&
+      parseInt(valgtEndDate.replace(/[^0-9 ]/g, "")) < 20240625
+    ) {
+      const date = new Date(valgtEndDate)
+      const formattedDate = date.toISOString().split("T")[0]
+      setEndDate(formattedDate)
+    }
   }
 
   return (
