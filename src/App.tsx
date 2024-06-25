@@ -260,6 +260,7 @@ function App() {
 
   const options: any = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
