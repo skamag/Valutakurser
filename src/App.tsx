@@ -100,18 +100,24 @@ function App() {
     "HUF - Ungarske forinter",
     "VND - Vietnamesiske dong",
   ]
-  const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
+  const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([
+    "USD - Amerikanske dollar",
+  ])
   const [searchText, setSearchText] = useState("")
   const [frekvens, setFrekvens] = useState("A")
   const [startDate, setStartDate] = useState("1994-04-15")
   const [endDate, setEndDate] = useState("2024-04-15")
 
-  let URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.USD+EUR+SEK+GBP.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
+  let URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.${selectedCurrencies[0].slice(
+    0,
+    3
+  )}.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
 
-  const [usdData, setUsdData] = useState<Observation[]>([])
-  const [eurData, setEurData] = useState<Observation[]>([])
-  const [sekData, setSekData] = useState<Observation[]>([])
-  const [gbpData, setGbpData] = useState<Observation[]>([])
+  const [curData, setCurData] = useState<Observation[]>([])
+  // const [usdData, setUsdData] = useState<Observation[]>([])
+  // const [eurData, setEurData] = useState<Observation[]>([])
+  // const [sekData, setSekData] = useState<Observation[]>([])
+  // const [gbpData, setGbpData] = useState<Observation[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -132,61 +138,76 @@ function App() {
         const timePeriods = observationDimension.values.map(
           (value) => value.name
         )
-
-        let usdSeries: any
-        let eurSeries: any
-        let gbpSeries: any
-        let sekSeries: any
+        let curSeries: any
+        // let usdSeries: any
+        // let eurSeries: any
+        // let gbpSeries: any
+        // let sekSeries: any
 
         if (frekvens === "A") {
-          usdSeries = dataSet.series["0:0:0:0"].observations
-          eurSeries = dataSet.series["0:1:0:0"].observations
-          gbpSeries = dataSet.series["0:2:0:0"].observations
-          sekSeries = dataSet.series["0:3:0:0"].observations
+          curSeries = dataSet.series["0:0:0:0"].observations
         } else if (frekvens === "M") {
-          sekSeries = dataSet.series["0:0:0:0"].observations
-          gbpSeries = dataSet.series["0:1:0:0"].observations
-          usdSeries = dataSet.series["0:2:0:0"].observations
-          eurSeries = dataSet.series["0:3:0:0"].observations
+          curSeries = dataSet.series["0:0:0:0"].observations
         } else if (frekvens === "B") {
-          usdSeries = dataSet.series["0:0:0:0"].observations
-          gbpSeries = dataSet.series["0:1:0:0"].observations
-          eurSeries = dataSet.series["0:2:0:0"].observations
-          sekSeries = dataSet.series["0:3:0:0"].observations
+          curSeries = dataSet.series["0:0:0:0"].observations
         }
+        // if (frekvens === "A") {
+        //   usdSeries = dataSet.series["0:0:0:0"].observations
+        //   eurSeries = dataSet.series["0:1:0:0"].observations
+        //   gbpSeries = dataSet.series["0:2:0:0"].observations
+        //   sekSeries = dataSet.series["0:3:0:0"].observations
+        // } else if (frekvens === "M") {
+        //   sekSeries = dataSet.series["0:0:0:0"].observations
+        //   gbpSeries = dataSet.series["0:1:0:0"].observations
+        //   usdSeries = dataSet.series["0:2:0:0"].observations
+        //   eurSeries = dataSet.series["0:3:0:0"].observations
+        // } else if (frekvens === "B") {
+        //   usdSeries = dataSet.series["0:0:0:0"].observations
+        //   gbpSeries = dataSet.series["0:1:0:0"].observations
+        //   eurSeries = dataSet.series["0:2:0:0"].observations
+        //   sekSeries = dataSet.series["0:3:0:0"].observations
+        // }
 
-        const parsedUsdData: Observation[] = timePeriods.map(
+        const parsedCurData: Observation[] = timePeriods.map(
           (timePeriod, index) => ({
             timePeriod,
-            value: parseFloat(usdSeries[index]?.[0] || "0"),
+            value: parseFloat(curSeries[index]?.[0] || "0"),
           })
         )
 
-        const parsedEurData: Observation[] = timePeriods.map(
-          (timePeriod, index) => ({
-            timePeriod,
-            value: parseFloat(eurSeries[index]?.[0] || "0"),
-          })
-        )
+        // const parsedUsdData: Observation[] = timePeriods.map(
+        //   (timePeriod, index) => ({
+        //     timePeriod,
+        //     value: parseFloat(usdSeries[index]?.[0] || "0"),
+        //   })
+        // )
 
-        const parsedSekData: Observation[] = timePeriods.map(
-          (timePeriod, index) => ({
-            timePeriod,
-            value: parseFloat(sekSeries[index]?.[0] || "0"),
-          })
-        )
+        // const parsedEurData: Observation[] = timePeriods.map(
+        //   (timePeriod, index) => ({
+        //     timePeriod,
+        //     value: parseFloat(eurSeries[index]?.[0] || "0"),
+        //   })
+        // )
 
-        const parsedGbpData: Observation[] = timePeriods.map(
-          (timePeriod, index) => ({
-            timePeriod,
-            value: parseFloat(gbpSeries[index]?.[0] || "0"),
-          })
-        )
+        // const parsedSekData: Observation[] = timePeriods.map(
+        //   (timePeriod, index) => ({
+        //     timePeriod,
+        //     value: parseFloat(sekSeries[index]?.[0] || "0"),
+        //   })
+        // )
 
-        setUsdData(parsedUsdData)
-        setEurData(parsedEurData)
-        setSekData(parsedSekData)
-        setGbpData(parsedGbpData)
+        // const parsedGbpData: Observation[] = timePeriods.map(
+        //   (timePeriod, index) => ({
+        //     timePeriod,
+        //     value: parseFloat(gbpSeries[index]?.[0] || "0"),
+        //   })
+        // )
+
+        setCurData(parsedCurData)
+        // setUsdData(parsedUsdData)
+        // setEurData(parsedEurData)
+        // setSekData(parsedSekData)
+        // setGbpData(parsedGbpData)
         setLoading(false)
 
         console.log(response)
@@ -198,11 +219,11 @@ function App() {
   }, [frekvens, startDate, endDate])
 
   const chartData = {
-    labels: usdData.map((obs) => obs.timePeriod),
+    labels: curData.map((obs) => obs.timePeriod),
     datasets: [
       {
-        label: "USD to NOK Exchange Rate",
-        data: usdData.map((obs) => obs.value),
+        label: `${selectedCurrencies[0]} to NOK Exchange Rate`,
+        data: curData.map((obs) => obs.value),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderWidth: 1,
