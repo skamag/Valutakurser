@@ -29,6 +29,10 @@
   justify-content: space-between;
   gap: 20px;
 }
+.changeValuesRightContainer {
+  display: flex;
+  gap: 20px;
+}
 .searchInputContainer {
   width: 100%;
   position: relative;
@@ -97,4 +101,34 @@ select:focus {
   padding: 10px 20px;
   margin-bottom: 20px;
   /* background-color: white; */
+}
+
+@media screen and (max-width: 800px) {
+  .searchInputContainer {
+    height: 50px;
+    box-sizing: border-box;
+  }
+  .changeValuesContainer {
+    flex-direction: column;
+  }
+  .changeValuesRightContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+  .graphContainer {
+    height: 600px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .changeValuesRightContainer {
+    flex-direction: column;
+  }
+  .graphContainer {
+    height: 400px;
+  }
+}
+@media screen and (max-width: 400px) {
+  .graphContainer {
+    height: 300px;
+  }
 }

@@ -428,43 +428,47 @@ function App() {
                   </div>
                 ))}
             </div>
-            <div className="frekvensContainer">
-              <select
-                name="frekvens"
-                id=""
-                className="frekvens"
-                onChange={handleChangeFrekvens}
-              >
-                <option value="A" className="frekvensOptions">
-                  Årlig
-                </option>
-                <option value="M" className="frekvensOptions">
-                  Månedlig
-                </option>
-                <option value="B" className="frekvensOptions">
-                  Daglig
-                </option>
-              </select>
-            </div>
-            <div className="startDateContainer">
-              <label htmlFor="startDate"></label>
-              <input
-                type="date"
-                name="startDate"
-                id="startDate"
-                value={startDate}
-                onChange={handleChangeStartDate}
-              />
-            </div>
-            <div className="endDateContainer">
-              <label htmlFor="endDate"></label>
-              <input
-                type="date"
-                name="endDate"
-                id="endDate"
-                value={endDate}
-                onChange={handleChangeEndDate}
-              />
+            <div className="changeValuesRightContainer">
+              <div>
+                <div className="frekvensContainer">
+                  <select
+                    name="frekvens"
+                    id=""
+                    className="frekvens"
+                    onChange={handleChangeFrekvens}
+                  >
+                    <option value="A" className="frekvensOptions">
+                      Årlig
+                    </option>
+                    <option value="M" className="frekvensOptions">
+                      Månedlig
+                    </option>
+                    <option value="B" className="frekvensOptions">
+                      Daglig
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div className="startDateContainer">
+                <label htmlFor="startDate"></label>
+                <input
+                  type="date"
+                  name="startDate"
+                  id="startDate"
+                  value={startDate}
+                  onChange={handleChangeStartDate}
+                />
+              </div>
+              <div className="endDateContainer">
+                <label htmlFor="endDate"></label>
+                <input
+                  type="date"
+                  name="endDate"
+                  id="endDate"
+                  value={endDate}
+                  onChange={handleChangeEndDate}
+                />
+              </div>
             </div>
           </div>
           <div className="">
