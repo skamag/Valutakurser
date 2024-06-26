@@ -258,7 +258,7 @@ function App() {
     ],
   }
 
-  const options: any = {
+  const options: {} = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -355,9 +355,17 @@ function App() {
       parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")),
       parseInt(endDate.replace(/[^0-9 ]/g, ""))
     )
+
     if (
-      parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) <
-        parseInt(endDate.replace(/[^0-9 ]/g, "")) &&
+      ((frekvens === "A" &&
+        parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) <
+          parseInt(endDate.replace(/[^0-9 ]/g, "")) - 100000) ||
+        (frekvens === "M" &&
+          parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) <
+            parseInt(endDate.replace(/[^0-9 ]/g, "")) - 1000) ||
+        (frekvens === "B" &&
+          parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) <
+            parseInt(endDate.replace(/[^0-9 ]/g, "")) - 10)) &&
       parseInt(valgtStartDate.replace(/[^0-9 ]/g, "")) > 19000000
     ) {
       const date = new Date(valgtStartDate)
