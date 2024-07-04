@@ -242,7 +242,7 @@ function App() {
   }
 
   const addCurrency = (cur: string) => {
-    if (!selectedCurrencies.includes(cur)) {
+    if (selectedCurrencies.length === 0 && !selectedCurrencies.includes(cur)) {
       setSelectedCurrencies((selectedCurrencies) => [
         ...selectedCurrencies,
         cur,
@@ -324,7 +324,15 @@ function App() {
                 onChange={handleTextChange}
               />
               {searchText !== "" && (
-                <div className="searchResultsContainer">
+                <div
+                  className={`${
+                    currencies.filter((currency) =>
+                      currency.toLowerCase().includes(searchText.toLowerCase())
+                    ).length > 0
+                      ? "searchResultsContainer"
+                      : ""
+                  }`}
+                >
                   {currencies
                     .filter((currency) =>
                       currency.toLowerCase().includes(searchText.toLowerCase())
