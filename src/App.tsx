@@ -138,15 +138,7 @@ function App() {
         const timePeriods = observationDimension.values.map(
           (value) => value.name
         )
-        let curSeries: any
-
-        if (frekvens === "A") {
-          curSeries = dataSet.series["0:0:0:0"].observations
-        } else if (frekvens === "M") {
-          curSeries = dataSet.series["0:0:0:0"].observations
-        } else if (frekvens === "B") {
-          curSeries = dataSet.series["0:0:0:0"].observations
-        }
+        let curSeries = dataSet.series["0:0:0:0"].observations
 
         const parsedCurData: Observation[] = timePeriods.map(
           (timePeriod, index) => ({
