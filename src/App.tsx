@@ -107,10 +107,6 @@ function App() {
   const [endDate, setEndDate] = useState("2024-04-15")
 
   const [curData, setCurData] = useState<Observation[]>([])
-  // const [usdData, setUsdData] = useState<Observation[]>([])
-  // const [eurData, setEurData] = useState<Observation[]>([])
-  // const [sekData, setSekData] = useState<Observation[]>([])
-  // const [gbpData, setGbpData] = useState<Observation[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -125,8 +121,6 @@ function App() {
     } else {
       URL = `https://data.norges-bank.no/api/data/EXR/${frekvens}.USD.NOK.SP?format=sdmx-json&startPeriod=${startDate}&endPeriod=${endDate}&locale=no`
     }
-
-    // console.log(selectedCurrencies)
 
     axios
       .get<ExchangeRateData>(URL)
@@ -145,10 +139,6 @@ function App() {
           (value) => value.name
         )
         let curSeries: any
-        // let usdSeries: any
-        // let eurSeries: any
-        // let gbpSeries: any
-        // let sekSeries: any
 
         if (frekvens === "A") {
           curSeries = dataSet.series["0:0:0:0"].observations
@@ -157,22 +147,6 @@ function App() {
         } else if (frekvens === "B") {
           curSeries = dataSet.series["0:0:0:0"].observations
         }
-        // if (frekvens === "A") {
-        //   usdSeries = dataSet.series["0:0:0:0"].observations
-        //   eurSeries = dataSet.series["0:1:0:0"].observations
-        //   gbpSeries = dataSet.series["0:2:0:0"].observations
-        //   sekSeries = dataSet.series["0:3:0:0"].observations
-        // } else if (frekvens === "M") {
-        //   sekSeries = dataSet.series["0:0:0:0"].observations
-        //   gbpSeries = dataSet.series["0:1:0:0"].observations
-        //   usdSeries = dataSet.series["0:2:0:0"].observations
-        //   eurSeries = dataSet.series["0:3:0:0"].observations
-        // } else if (frekvens === "B") {
-        //   usdSeries = dataSet.series["0:0:0:0"].observations
-        //   gbpSeries = dataSet.series["0:1:0:0"].observations
-        //   eurSeries = dataSet.series["0:2:0:0"].observations
-        //   sekSeries = dataSet.series["0:3:0:0"].observations
-        // }
 
         const parsedCurData: Observation[] = timePeriods.map(
           (timePeriod, index) => ({
@@ -181,42 +155,8 @@ function App() {
           })
         )
 
-        // const parsedUsdData: Observation[] = timePeriods.map(
-        //   (timePeriod, index) => ({
-        //     timePeriod,
-        //     value: parseFloat(usdSeries[index]?.[0] || "0"),
-        //   })
-        // )
-
-        // const parsedEurData: Observation[] = timePeriods.map(
-        //   (timePeriod, index) => ({
-        //     timePeriod,
-        //     value: parseFloat(eurSeries[index]?.[0] || "0"),
-        //   })
-        // )
-
-        // const parsedSekData: Observation[] = timePeriods.map(
-        //   (timePeriod, index) => ({
-        //     timePeriod,
-        //     value: parseFloat(sekSeries[index]?.[0] || "0"),
-        //   })
-        // )
-
-        // const parsedGbpData: Observation[] = timePeriods.map(
-        //   (timePeriod, index) => ({
-        //     timePeriod,
-        //     value: parseFloat(gbpSeries[index]?.[0] || "0"),
-        //   })
-        // )
-
         setCurData(parsedCurData)
-        // setUsdData(parsedUsdData)
-        // setEurData(parsedEurData)
-        // setSekData(parsedSekData)
-        // setGbpData(parsedGbpData)
         setLoading(false)
-
-        // console.log(response)
       })
       .catch((error) => {
         setError("Error fetching data")
@@ -228,33 +168,12 @@ function App() {
     labels: curData.map((obs) => obs.timePeriod),
     datasets: [
       {
-        label: `${selectedCurrencies[0]} to NOK Exchange Rate`,
+        label: `${selectedCurrencies[0]} til NOK vekslingskurs`,
         data: curData.map((obs) => obs.value),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderWidth: 1,
       },
-      // {
-      //   label: "EUR to NOK Exchange Rate",
-      //   data: eurData.map((obs) => obs.value),
-      //   borderColor: "rgba(255, 99, 132, 1)",
-      //   backgroundColor: "rgba(255, 99, 132, 0.2)",
-      //   borderWidth: 1,
-      // },
-      // {
-      //   label: "10 SEK to NOK Exchange Rate",
-      //   data: sekData.map((obs) => obs.value / 10),
-      //   borderColor: "rgba(54, 162, 235, 1)",
-      //   backgroundColor: "rgba(54, 162, 235, 0.2)",
-      //   borderWidth: 1,
-      // },
-      // {
-      //   label: "GBP to NOK Exchange Rate",
-      //   data: gbpData.map((obs) => obs.value),
-      //   borderColor: "rgba(255, 206, 86, 1)",
-      //   backgroundColor: "rgba(255, 206, 86, 0.2)",
-      //   borderWidth: 1,
-      // },
     ],
   }
 
@@ -343,7 +262,6 @@ function App() {
   ) => {
     let valgtFrekvens = event.target.value
     setFrekvens(valgtFrekvens)
-    // console.log(valgtFrekvens)
   }
 
   const handleChangeStartDate = (
@@ -377,7 +295,6 @@ function App() {
   const handleChangeEndDate = (event: React.ChangeEvent<HTMLInputElement>) => {
     let valgtEndDate = event.target.value
 
-    // console.log(parseInt(valgtEndDate.replace(/[^0-9 ]/g, "")))
     if (
       parseInt(valgtEndDate.replace(/[^0-9 ]/g, "")) >
         parseInt(startDate.replace(/[^0-9 ]/g, "")) &&
