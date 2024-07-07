@@ -103,6 +103,7 @@ function App() {
   const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([])
   const [searchText, setSearchText] = useState("")
   const [frekvens, setFrekvens] = useState("A")
+  const [pointRadius, setPointRadius] = useState(3)
   const [startDate, setStartDate] = useState("1994-04-15")
   const [endDate, setEndDate] = useState("2024-04-15")
 
@@ -165,6 +166,7 @@ function App() {
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderWidth: 1,
+        pointRadius: pointRadius,
       },
     ],
   }
@@ -253,6 +255,12 @@ function App() {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     let valgtFrekvens = event.target.value
+    valgtFrekvens === "A"
+      ? setPointRadius(3)
+      : valgtFrekvens === "M"
+      ? setPointRadius(1)
+      : setPointRadius(0)
+
     setFrekvens(valgtFrekvens)
   }
 
