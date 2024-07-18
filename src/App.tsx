@@ -309,7 +309,7 @@ function App() {
   return (
     <div className="App">
       {/* <Header /> */}
-      <h1 className="header">Valutakurser</h1>
+      {/* <h1 className="header">Valutakurser</h1> */}
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {!loading && !error && (

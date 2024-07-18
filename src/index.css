@@ -14,9 +14,9 @@ body {
   /* background-image: linear-gradient(45deg, rgb(54, 22, 27), rgb(48, 31, 89)); */
   background-image: linear-gradient(
     225deg,
-    #220013 0%,
-    #1b0033 50%,
-    #001727 100%
+    #220018 0%,
+    #000733 50%,
+    #001e25 100%
   );
 
   background-attachment: fixed;
